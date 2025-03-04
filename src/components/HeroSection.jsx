@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-
+//FIRST
 const HeroSection = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -27,209 +27,26 @@ const HeroSection = () => {
     {
       offer: "45% MEGA SALE OFFER",
       title: "Unique & Stylish Furniture",
-      description: "Elevate your home with our premium furniture collection. Handcrafted for comfort and style."
+      description: "Elevate your home with our premium furniture collection. Handcrafted for comfort and style.",
+      image: "/componenets/img1.png"
     },
     {
       offer: "NEW ARRIVALS",
       title: "Modern Living Room Collection",
-      description: "Transform your living space with our contemporary designs that blend form and function."
+      description: "Transform your living space with our contemporary designs that blend form and function.",
+      image: "/components/img1.png"
     },
     {
       offer: "LIMITED TIME OFFER",
       title: "Bedroom Essentials",
-      description: "Create your perfect sanctuary with our cozy and elegant bedroom furniture selection."
+      description: "Create your perfect sanctuary with our cozy and elegant bedroom furniture selection.",
+      image: "/componenets/img1.png"
     }
-  ];
-
-  // Furniture slide content
-  const slides = [
-    // Slide 1 furniture (Living Room)
-    <>
-      {/* Cabinet */}
-      <div className="absolute left-0 bottom-20 transition-all duration-1000" 
-           style={{
-             opacity: currentSlide === 0 ? 1 : 0, 
-             transform: `translateY(${currentSlide === 0 ? '0' : '50px'}) scale(${currentSlide === 0 ? 1 : 0.9})`,
-             filter: `blur(${currentSlide === 0 ? 0 : '5px'})`
-           }}>
-        <div className="h-36 w-44 flex rounded-sm overflow-hidden bg-transparent shadow-lg">
-          <div className="w-2/3 bg-amber-50 flex flex-col">
-            <div className="h-1/2 border-b border-amber-100"></div>
-            <div className="h-1/2"></div>
-          </div>
-          <div className="w-1/3 bg-teal-700"></div>
-        </div>
-        <div className="flex justify-between mt-1 px-4">
-          {[...Array(4)].map((_, i) => <div key={i} className="h-6 w-1 bg-amber-100"></div>)}
-        </div>
-      </div>
-      
-      {/* Chair */}
-      <div className="absolute left-1/2 bottom-16 transition-all duration-1000 delay-300" 
-           style={{
-             opacity: currentSlide === 0 ? 1 : 0, 
-             transform: `translateY(${currentSlide === 0 ? '0' : '50px'}) rotate(${currentSlide === 0 ? 0 : '-5deg'})`
-           }}>
-        <div className="w-40 h-40 bg-white rounded-t-full relative overflow-hidden shadow-lg">
-          <div className="absolute inset-2 rounded-t-full bg-gray-50"></div>
-        </div>
-        <div className="flex justify-between px-6">
-          <div className="h-10 w-1 bg-amber-50 transform rotate-12"></div>
-          <div className="h-10 w-1 bg-amber-50"></div>
-          <div className="h-10 w-1 bg-amber-50 transform -rotate-12"></div>
-        </div>
-      </div>
-      
-      {/* Ottoman and Lamp */}
-      <div className="absolute left-1/3 bottom-10 transition-all duration-1000 delay-500" 
-           style={{
-             opacity: currentSlide === 0 ? 1 : 0, 
-             transform: `translateY(${currentSlide === 0 ? '0' : '50px'}) scale(${currentSlide === 0 ? 1 : 0.8})`
-           }}>
-        <div className="w-28 h-14 bg-white rounded-full shadow-lg">
-          <div className="absolute inset-1 rounded-full bg-gray-50"></div>
-        </div>
-        <div className="flex justify-between px-6">
-          {[...Array(3)].map((_, i) => <div key={i} className="h-8 w-1 bg-amber-50" style={{transform: i === 0 ? 'rotate(6deg)' : i === 2 ? 'rotate(-6deg)' : ''}}></div>)}
-        </div>
-      </div>
-      <div className="absolute right-8 bottom-0 transition-all duration-1000 delay-700" 
-           style={{
-             opacity: currentSlide === 0 ? 1 : 0, 
-             transform: `translateY(${currentSlide === 0 ? '0' : '50px'}) rotate(${currentSlide === 0 ? 0 : '10deg'})`
-           }}>
-        <div className="w-1 h-56 bg-amber-300"></div>
-        <div className="absolute -top-6 -left-5 w-14 h-14 rounded-full bg-amber-50 shadow-lg"></div>
-      </div>
-    </>,
-    
-    // Slide 2 furniture (Bedroom)
-    <>
-      {/* Bed */}
-      <div className="absolute left-1/4 bottom-16 transition-all duration-1000" 
-           style={{
-             opacity: currentSlide === 1 ? 1 : 0, 
-             transform: `translateY(${currentSlide === 1 ? '0' : '50px'}) scale(${currentSlide === 1 ? 1 : 0.9})`,
-             filter: `blur(${currentSlide === 1 ? 0 : '5px'})`
-           }}>
-        <div className="h-20 w-64 bg-amber-50 rounded-md shadow-lg"></div>
-        <div className="h-8 w-68 -ml-2 bg-teal-600 rounded-t-md"></div>
-        <div className="flex justify-between mt-1 px-4">
-          {[...Array(4)].map((_, i) => <div key={i} className="h-8 w-1 bg-amber-100"></div>)}
-        </div>
-      </div>
-      
-      {/* Nightstand */}
-      <div className="absolute right-1/4 bottom-20 transition-all duration-1000 delay-300" 
-           style={{
-             opacity: currentSlide === 1 ? 1 : 0, 
-             transform: `translateY(${currentSlide === 1 ? '0' : '50px'}) rotate(${currentSlide === 1 ? 0 : '5deg'})`
-           }}>
-        <div className="h-32 w-24 bg-amber-100 rounded-sm shadow-lg flex flex-col">
-          <div className="h-1/3 border-b border-amber-200"></div>
-          <div className="h-2/3"></div>
-        </div>
-        <div className="flex justify-center mt-1">
-          <div className="h-6 w-1 bg-amber-200"></div>
-        </div>
-      </div>
-      
-      {/* Dresser */}
-      <div className="absolute left-8 bottom-24 transition-all duration-1000 delay-500" 
-           style={{
-             opacity: currentSlide === 1 ? 1 : 0, 
-             transform: `translateY(${currentSlide === 1 ? '0' : '50px'}) scale(${currentSlide === 1 ? 1 : 0.8})`
-           }}>
-        <div className="h-36 w-40 bg-gray-50 rounded-sm shadow-lg flex flex-col">
-          {[...Array(4)].map((_, i) => <div key={i} className="h-1/4 border-b border-gray-100"></div>)}
-        </div>
-        <div className="flex justify-between px-4 mt-1">
-          {[...Array(3)].map((_, i) => <div key={i} className="h-6 w-1 bg-gray-200"></div>)}
-        </div>
-      </div>
-      
-      {/* Lamp */}
-      <div className="absolute right-10 bottom-0 transition-all duration-1000 delay-700" 
-           style={{
-             opacity: currentSlide === 1 ? 1 : 0, 
-             transform: `translateY(${currentSlide === 1 ? '0' : '50px'}) rotate(${currentSlide === 1 ? 0 : '-10deg'})`
-           }}>
-        <div className="w-1 h-48 bg-amber-300"></div>
-        <div className="absolute -top-6 -left-5 w-14 h-14 rounded-full bg-amber-50 shadow-lg"></div>
-      </div>
-    </>,
-    
-    // Slide 3 furniture (Dining Room)
-    <>
-      {/* Dining Table */}
-      <div className="absolute left-1/4 bottom-24 transition-all duration-1000" 
-           style={{
-             opacity: currentSlide === 2 ? 1 : 0, 
-             transform: `translateY(${currentSlide === 2 ? '0' : '50px'}) scale(${currentSlide === 2 ? 1 : 0.9})`,
-             filter: `blur(${currentSlide === 2 ? 0 : '5px'})`
-           }}>
-        <div className="h-10 w-72 bg-amber-50 rounded-md shadow-lg"></div>
-        <div className="flex justify-between px-8 mt-1">
-          {[...Array(4)].map((_, i) => <div key={i} className="h-24 w-1 bg-amber-100"></div>)}
-        </div>
-      </div>
-      
-      {/* Dining Chair 1 */}
-      <div className="absolute left-1/4 bottom-12 transition-all duration-1000 delay-300" 
-           style={{
-             opacity: currentSlide === 2 ? 1 : 0, 
-             transform: `translateY(${currentSlide === 2 ? '0' : '50px'}) rotate(${currentSlide === 2 ? 0 : '-5deg'})`
-           }}>
-        <div className="w-20 h-20 bg-teal-600 rounded-t-md relative overflow-hidden shadow-lg">
-          <div className="absolute inset-1 rounded-t-md bg-teal-500"></div>
-        </div>
-        <div className="flex justify-between px-4">
-          <div className="h-8 w-1 bg-amber-50"></div>
-          <div className="h-8 w-1 bg-amber-50"></div>
-        </div>
-      </div>
-      
-      {/* Dining Chair 2 */}
-      <div className="absolute right-1/4 bottom-12 transition-all duration-1000 delay-500" 
-           style={{
-             opacity: currentSlide === 2 ? 1 : 0, 
-             transform: `translateY(${currentSlide === 2 ? '0' : '50px'}) rotate(${currentSlide === 2 ? 0 : '5deg'})`
-           }}>
-        <div className="w-20 h-20 bg-teal-600 rounded-t-md relative overflow-hidden shadow-lg">
-          <div className="absolute inset-1 rounded-t-md bg-teal-500"></div>
-        </div>
-        <div className="flex justify-between px-4">
-          <div className="h-8 w-1 bg-amber-50"></div>
-          <div className="h-8 w-1 bg-amber-50"></div>
-        </div>
-      </div>
-      
-      {/* Cabinet */}
-      <div className="absolute right-8 bottom-20 transition-all duration-1000 delay-700" 
-           style={{
-             opacity: currentSlide === 2 ? 1 : 0, 
-             transform: `translateY(${currentSlide === 2 ? '0' : '50px'}) scale(${currentSlide === 2 ? 1 : 0.8})`
-           }}>
-        <div className="h-40 w-32 bg-gray-50 rounded-sm shadow-lg flex flex-col">
-          <div className="h-1/2 border-b border-gray-100 flex">
-            <div className="w-1/2 border-r border-gray-100"></div>
-            <div className="w-1/2"></div>
-          </div>
-          <div className="h-1/2 flex">
-            <div className="w-1/2 border-r border-gray-100"></div>
-            <div className="w-1/2"></div>
-          </div>
-        </div>
-        <div className="flex justify-between px-4 mt-1">
-          {[...Array(4)].map((_, i) => <div key={i} className="h-6 w-1 bg-gray-200"></div>)}
-        </div>
-      </div>
-    </>
   ];
 
   return (
     <section 
-      className="relative h-96 md:h-[450px] lg:h-[540px] overflow-hidden max-w-6xl mx-auto" 
+      className="relative h-[600px] overflow-hidden max-w-6xl mx-auto" 
       style={{ 
         backgroundColor: creamColor,
         transition: 'all 0.8s ease-in-out',
@@ -237,57 +54,53 @@ const HeroSection = () => {
         opacity: isLoaded ? 1 : 0
       }}
     >
-      <div className="container mx-auto px-4 h-full flex items-center">
-        {/* Text Content */}
-        <div className="w-full md:w-1/2 z-10 transition-all duration-1000 transform" 
-             style={{
-               opacity: isLoaded ? 1 : 0,
-               transform: isLoaded ? 'translateX(0)' : 'translateX(-50px)'
-             }}>
-          <p className="text-gray-700 mb-3 transition-all duration-1000"
-             style={{
-               opacity: 1, 
-               transform: `translateY(${currentSlide === currentSlide ? '0' : '20px'})`,
-               textShadow: '0px 0px 1px rgba(0,0,0,0.05)'
-             }}>
-            {slideContent[currentSlide].offer}
-          </p>
-          
-          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 transition-all duration-1000"
-             style={{
-               opacity: 1, 
-               transform: `translateY(${currentSlide === currentSlide ? '0' : '20px'})`,
-               textShadow: '1px 1px 2px rgba(0,0,0,0.1)'
-             }}>
-            {slideContent[currentSlide].title}
-          </h1>
-          
-          <p className="text-gray-700 mb-8 max-w-md transition-all duration-1000 text-lg"
-             style={{
-               opacity: 1, 
-               transform: `translateY(${currentSlide === currentSlide ? '0' : '20px'})`
-             }}>
-            {slideContent[currentSlide].description}
-          </p>
-          
-          <button className="bg-black text-white px-8 py-3 text-lg font-medium hover:bg-gray-800 transition-all duration-500 transform hover:translate-y-1 hover:shadow-lg">
-            SHOP NOW
-          </button>
-        </div>
-        
-        {/* Furniture Display Area */}
-        <div className="hidden md:block w-1/2 h-full relative">
-          {slides.map((slide, index) => (
-            <div key={index} 
-                 className={`absolute inset-0 flex items-center justify-center transition-all duration-1500 transform ${
-                   currentSlide === index ? 'opacity-100 scale-100' : index === (currentSlide - 1 + totalSlides) % totalSlides ? 
-                   'opacity-0 scale-90 translate-x-full' : 'opacity-0 scale-90 -translate-x-full'
-                 }`}
-                 style={{
-                   transition: 'all 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)'
-                 }}
+      <div className="container mx-auto px-4 h-full flex items-center relative">
+        {/* Slides Container */}
+        <div className="absolute inset-0 flex items-center">
+          {slideContent.map((slide, index) => (
+            <div 
+              key={index}
+              className={`absolute inset-0 flex items-center transition-all duration-1000 ${
+                currentSlide === index 
+                  ? 'opacity-100 translate-x-0' 
+                  : currentSlide > index 
+                    ? 'opacity-0 -translate-x-full'
+                    : 'opacity-0 translate-x-full'
+              }`}
             >
-              {slide}
+              <div className="w-full flex items-center space-x-8">
+                {/* Text Content */}
+                <div className="w-1/2 z-10 pr-8">
+                  <p className="text-gray-700 mb-3 uppercase tracking-wider text-sm">
+                    {slide.offer}
+                  </p>
+                  
+                  <h1 className="text-4xl lg:text-5xl font-bold mb-6 leading-tight">
+                    {slide.title}
+                  </h1>
+                  
+                  <p className="text-gray-700 mb-8 max-w-md text-lg leading-relaxed">
+                    {slide.description}
+                  </p>
+                  
+                  <button className="bg-black text-white px-8 py-3 text-lg font-medium hover:bg-gray-800 transition-all duration-500 transform hover:translate-y-1 hover:shadow-lg">
+                    SHOP NOW
+                  </button>
+                </div>
+
+                {/* Image */}
+                <div className="w-1/2">
+                  <img 
+                    src={slide.image} 
+                    alt={slide.title}
+                    className="shadow-lg rounded-lg max-w-full h-auto object-cover"
+                    style={{
+                      maxHeight: '500px',
+                      width: '100%'
+                    }}
+                  />
+                </div>
+              </div>
             </div>
           ))}
         </div>
@@ -327,5 +140,6 @@ const HeroSection = () => {
     </section>
   );
 };
+
 
 export default HeroSection;

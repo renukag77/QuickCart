@@ -6,6 +6,7 @@ const Header = () => {
   const [showBanner, setShowBanner] = useState(true);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [cartCount, setCartCount] = useState(0);
+  const [isCartOpen, setIsCartOpen] = useState(false);
   
   // Handle scroll effect
   useEffect(() => {
@@ -157,7 +158,10 @@ const Header = () => {
                 <User size={18} className="transition-transform duration-300 hover:rotate-12" />
               </button>
               <div className="relative">
-                <button className="p-1.5 hover:bg-white/10 rounded-full transition-all duration-300 transform hover:scale-110">
+                <button 
+                  className="p-1.5 hover:bg-white/10 rounded-full transition-all duration-300 transform hover:scale-110"
+                  onClick={() => setIsCartOpen(true)}
+                >
                   <ShoppingCart size={18} className="transition-transform duration-300 hover:rotate-12" />
                 </button>
                 <span className="absolute -top-1 -right-1 bg-[#EFDFBB] text-[#722F37] text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center transition-all duration-500 transform hover:scale-110 animate-fadeIn">
@@ -205,6 +209,57 @@ const Header = () => {
           </nav>
         </div>
       </div>
+      
+      {/* Cart Popup */}
+      {isCartOpen && (
+        <div 
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm"
+          onClick={() => setIsCartOpen(false)}
+        >
+          <div 
+            className="bg-white rounded-lg shadow-xl w-96 p-6 relative"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button 
+              className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
+              onClick={() => setIsCartOpen(false)}
+            >
+              <X size={24} />
+            </button>
+            
+            <h2 className="text-2xl font-bold mb-4">Your Cart</h2>
+            
+            <div className="flex justify-between items-center border-b py-4">
+              <div>
+                <h3 className="font-medium">Accent Leisure Chairs</h3>
+                <div className="flex items-center mt-2">
+                  <input 
+                    type="number" 
+                    defaultValue="1" 
+                    min="1" 
+                    className="w-16 border rounded text-center mr-2"
+                  />
+                  <span className="font-semibold">$ 65.35 USD</span>
+                </div>
+              </div>
+              <button className="text-red-500 hover:text-red-700">
+                Remove
+              </button>
+            </div>
+            
+            <div className="mt-4 flex justify-between items-center">
+              <span className="font-bold text-lg">Subtotal</span>
+              <span className="font-bold text-lg">$ 65.35 USD</span>
+            </div>
+            
+            <button 
+              className="w-full bg-blue-500 text-white py-3 rounded-lg mt-4 hover:bg-blue-600 transition-colors"
+            >
+              Continue to Checkout
+            </button>
+          </div>
+        </div>
+      )}
       
       {/* CSS Animations */}
       <style jsx>{`
