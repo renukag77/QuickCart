@@ -1,12 +1,25 @@
 import React from 'react';
-//THIRD
+import { motion } from 'framer-motion';
+import { Heart, ShoppingCart } from 'lucide-react';
+
 const ProductCard = ({ image, name, currentPrice, originalPrice }) => {
   const accentColor = "#722F37";
   const creamColor = "#EFDFBB";
 
   return (
-    <div 
-      className="bg-white rounded-lg shadow-lg overflow-hidden transition-all duration-300 ease-in-out transform hover:-translate-y-2 hover:shadow-2xl group"
+    <motion.div 
+      initial={{ opacity: 0, y: 50 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ 
+        type: "spring", 
+        stiffness: 100,
+        duration: 0.5
+      }}
+      whileHover={{ 
+        scale: 1.05,
+        transition: { duration: 0.3 }
+      }}
+      className="relative bg-white rounded-lg shadow-lg overflow-hidden group"
       style={{ 
         border: `2px solid ${accentColor}`,
         backgroundColor: accentColor,
@@ -14,24 +27,56 @@ const ProductCard = ({ image, name, currentPrice, originalPrice }) => {
       }}
     >
       <div className="overflow-hidden relative">
-        <img 
+        <motion.img 
           src={image} 
           alt={name} 
-          className="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-110 opacity-80 group-hover:opacity-100"
+          whileHover={{ scale: 1.1 }}
+          transition={{ duration: 0.3 }}
+          className="w-full h-64 object-cover transition-transform duration-300 group-hover:opacity-80"
         />
-        <div className="absolute inset-0 bg-black opacity-20 group-hover:opacity-0 transition-opacity duration-300"></div>
+        
+        {/* Hover Overlay */}
+        <motion.div 
+          initial={{ opacity: 0 }}
+          whileHover={{ opacity: 1 }}
+          className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center space-x-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+        >
+          <motion.button 
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            className="bg-white p-3 rounded-full shadow-lg"
+          >
+            <ShoppingCart className="text-black" />
+          </motion.button>
+          <motion.button 
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            className="bg-white p-3 rounded-full shadow-lg"
+          >
+            <Heart className="text-red-500" />
+          </motion.button>
+        </motion.div>
       </div>
-      <div 
+      
+      <motion.div 
         className="p-6 text-center"
-        style={{ backgroundColor: `${accentColor}` }}
+        style={{ backgroundColor: accentColor }}
       >
-        <h3 
+        <motion.h3 
           className="text-xl font-semibold mb-2 h-14 flex items-center justify-center"
           style={{ color: creamColor }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.2 }}
         >
           {name}
-        </h3>
-        <div className="flex justify-center items-center space-x-2">
+        </motion.h3>
+        <motion.div 
+          className="flex justify-center items-center space-x-2"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3 }}
+        >
           <span 
             className="text-lg font-semibold"
             style={{ color: creamColor }}
@@ -39,80 +84,102 @@ const ProductCard = ({ image, name, currentPrice, originalPrice }) => {
             ₹{currentPrice}
           </span>
           {originalPrice && (
-            <span className="text-gray-300 line-through text-sm ml-2">
+            <motion.span 
+              className="text-gray-300 line-through text-sm ml-2"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.4 }}
+            >
               ₹{originalPrice}
-            </span>
+            </motion.span>
           )}
-        </div>
-      </div>
-    </div>
+        </motion.div>
+      </motion.div>
+
+      {/* Discount Badge */}
+      {originalPrice && (
+        <motion.div 
+          className="absolute top-4 right-4 bg-yellow-400 text-black px-3 py-1 rounded-full text-sm font-bold"
+          initial={{ opacity: 0, x: 50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.5 }}
+        >
+          {Math.round(((originalPrice.replace(',', '') - currentPrice.replace(',', '')) / originalPrice.replace(',', '')) * 100)}% OFF
+        </motion.div>
+      )}
+    </motion.div>
   );
 };
 
-const FeaturedCollections = ({ 
+const FeaturedSofaCollections = ({ 
   products = [
     {
-      image: "/api/placeholder/300/300?text=Accent+Chair",
-      name: "Accent Leisure Chairs",
-      currentPrice: "4,299",
-      originalPrice: "6,699"
+      image: "/sofaset.png",
+      name: "Luxury Sofa Set",
+      currentPrice: "24,999",
+      originalPrice: "32,999"
     },
     {
-      image: "/api/placeholder/300/300?text=Wooden+Table",
-      name: "Wooden Showpice Table",
-      currentPrice: "2,099",
-      originalPrice: "4,459"
+      image: "/sofa2.png",
+      name: "Modern Leather Sofa",
+      currentPrice: "18,499",
+      originalPrice: "25,999"
     },
     {
-      image: "/api/placeholder/300/300?text=Egg+Chair",
-      name: "Blockers Egg Chair",
-      currentPrice: "3,279",
-      originalPrice: "5,229"
-    },
-    {
-      image: "/api/placeholder/300/300?text=Side+Table",
-      name: "Classic Side Table",
-      currentPrice: "2,789",
-      originalPrice: "4,269"
-    },
-    {
-      image: "/api/placeholder/300/300?text=Storage+Unit",
-      name: "Vintage Storage Unit",
-      currentPrice: "5,879",
-      originalPrice: "8,159"
-    },
-    {
-      image: "/api/placeholder/300/300?text=Bed+Frame",
-      name: "Tufted Bed Frame",
-      currentPrice: "17,999",
-      originalPrice: "26,099"
+      image: "/sofa3.png",
+      name: "Classic Wooden Sofa",
+      currentPrice: "15,999",
+      originalPrice: "21,499"
     }
   ]
 }) => {
   const creamColor = "#EFDFBB";
   const accentColor = "#722F37";
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: { 
+      opacity: 1,
+      transition: {
+        delayChildren: 0.3,
+        staggerChildren: 0.2
+      }
+    }
+  };
+
   return (
-    <div 
+    <motion.div 
+      initial="hidden"
+      animate="visible"
+      variants={containerVariants}
       className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16"
       style={{ backgroundColor: creamColor }}
     >
       <div className="container mx-auto">
-        <h2 
+        <motion.h2 
+          initial={{ opacity: 0, y: -50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
           className="text-center text-4xl font-bold mb-4"
           style={{ color: accentColor }}
         >
-          Featured Collections
-        </h2>
-        <p 
+          Featured Sofa Collections
+        </motion.h2>
+        <motion.p 
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
           className="text-center text-lg mb-12 max-w-2xl mx-auto"
           style={{ color: `${accentColor}80` }}
         >
-          Most Selling and Trending Products
-        </p>
+          Elegant and Comfortable Sofa Sets
+        </motion.p>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {products.slice(0, 3).map((product, index) => (
+        <motion.div 
+          variants={containerVariants}
+          className="grid grid-cols-1 md:grid-cols-3 gap-8"
+        >
+          {products.map((product, index) => (
             <ProductCard 
               key={index}
               image={product.image}
@@ -121,10 +188,10 @@ const FeaturedCollections = ({
               originalPrice={product.originalPrice}
             />
           ))}
-        </div>
+        </motion.div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
-export default FeaturedCollections;
+export default FeaturedSofaCollections;

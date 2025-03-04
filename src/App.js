@@ -8,6 +8,16 @@ import CreamBackground from "./components/CreamBackground";
 import Login from "./LoginPage";
 import FeaturedCollections from "./components/FeaturedCollections";
 
+function Home() {
+  return (
+    <>
+      <HeroSection />
+      <FurnitureUI />
+      <FeaturedCollections />
+    </>
+  );
+}
+
 function App() {
   return (
     <Router>
@@ -15,10 +25,8 @@ function App() {
         <div className="App">
           <Header />
           <Routes>
-            <Route path="/" element={<HeroSection />} />
+            <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/furniture" element={<FurnitureUI />} />
-            <Route path="/collections" element={<FeaturedCollections />} />
           </Routes>
         </div>
       </CreamBackground>
