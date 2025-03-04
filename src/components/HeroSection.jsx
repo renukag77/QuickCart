@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
-//FIRST
+
 const HeroSection = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isLoaded, setIsLoaded] = useState(false);
   const totalSlides = 3;
   const creamColor = "#EFDFBB";
 
-  // Set isLoaded after component mounts to trigger initial animations
   useEffect(() => {
     setTimeout(() => {
       setIsLoaded(true);
@@ -16,31 +15,30 @@ const HeroSection = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % totalSlides);
-    }, 6000); // Slightly longer duration between slides
+    }, 6000);
     return () => clearInterval(interval);
   }, []);
 
   const goToSlide = (index) => setCurrentSlide(index);
 
-  // Content for each slide
   const slideContent = [
     {
       offer: "45% MEGA SALE OFFER",
       title: "Unique & Stylish Furniture",
       description: "Elevate your home with our premium furniture collection. Handcrafted for comfort and style.",
-      image: "/componenets/img1.png"
+      image: "/img1.png"
     },
     {
       offer: "NEW ARRIVALS",
       title: "Modern Living Room Collection",
       description: "Transform your living space with our contemporary designs that blend form and function.",
-      image: "/components/img1.png"
+      image: "/furniture1.png"
     },
     {
       offer: "LIMITED TIME OFFER",
       title: "Bedroom Essentials",
       description: "Create your perfect sanctuary with our cozy and elegant bedroom furniture selection.",
-      image: "/componenets/img1.png"
+      image: "/furniture2.png"
     }
   ];
 
@@ -55,7 +53,6 @@ const HeroSection = () => {
       }}
     >
       <div className="container mx-auto px-4 h-full flex items-center relative">
-        {/* Slides Container */}
         <div className="absolute inset-0 flex items-center">
           {slideContent.map((slide, index) => (
             <div 
@@ -69,7 +66,6 @@ const HeroSection = () => {
               }`}
             >
               <div className="w-full flex items-center space-x-8">
-                {/* Text Content */}
                 <div className="w-1/2 z-10 pr-8">
                   <p className="text-gray-700 mb-3 uppercase tracking-wider text-sm">
                     {slide.offer}
@@ -87,17 +83,12 @@ const HeroSection = () => {
                     SHOP NOW
                   </button>
                 </div>
-
-                {/* Image */}
                 <div className="w-1/2">
                   <img 
                     src={slide.image} 
                     alt={slide.title}
                     className="shadow-lg rounded-lg max-w-full h-auto object-cover"
-                    style={{
-                      maxHeight: '500px',
-                      width: '100%'
-                    }}
+                    style={{ maxHeight: '500px', width: '100%' }}
                   />
                 </div>
               </div>
@@ -105,8 +96,6 @@ const HeroSection = () => {
           ))}
         </div>
       </div>
-      
-      {/* Enhanced Pagination Dots with animations */}
       <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex space-x-3">
         {[...Array(totalSlides)].map((_, index) => (
           <button 
@@ -125,21 +114,8 @@ const HeroSection = () => {
           />
         ))}
       </div>
-      
-      {/* Background decorative elements */}
-      <div className="absolute -right-4 -top-4 w-24 h-24 rounded-full bg-amber-100 opacity-20"
-           style={{
-             transition: 'all 1s ease-in-out',
-             transform: isLoaded ? 'scale(1)' : 'scale(0)'
-           }}></div>
-      <div className="absolute left-1/4 -bottom-8 w-32 h-32 rounded-full bg-teal-100 opacity-20"
-           style={{
-             transition: 'all 1s ease-in-out 0.3s',
-             transform: isLoaded ? 'scale(1)' : 'scale(0)'
-           }}></div>
     </section>
   );
 };
-
 
 export default HeroSection;

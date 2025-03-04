@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Search, ShoppingCart, User, Menu, X } from 'lucide-react';
+import { Link } from "react-router-dom"; // Import Link
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -123,11 +124,6 @@ const Header = () => {
                   </svg>
                 </a>
                 <div className="absolute left-0 mt-2 w-48 bg-white text-black rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform origin-top-left scale-95 group-hover:scale-100 z-50">
-                  <div className="py-1">
-                    <a href="#" className="block px-4 py-2 text-sm hover:bg-gray-100">Home Style 1</a>
-                    <a href="#" className="block px-4 py-2 text-sm hover:bg-gray-100">Home Style 2</a>
-                    <a href="#" className="block px-4 py-2 text-sm hover:bg-gray-100">Home Style 3</a>
-                  </div>
                 </div>
               </div>
               <div className="relative group">
@@ -154,9 +150,9 @@ const Header = () => {
                   <Search size={18} className="group-hover:text-white text-white/80 transition-colors duration-300" />
                 </button>
               </div>
-              <button className="p-1.5 hover:bg-white/10 rounded-full transition-all duration-300 transform hover:scale-110">
+              <Link to="/login" className="p-1.5 hover:bg-white/10 rounded-full transition-all duration-300 transform hover:scale-110">
                 <User size={18} className="transition-transform duration-300 hover:rotate-12" />
-              </button>
+            </Link>
               <div className="relative">
                 <button 
                   className="p-1.5 hover:bg-white/10 rounded-full transition-all duration-300 transform hover:scale-110"
