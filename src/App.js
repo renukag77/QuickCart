@@ -1,17 +1,24 @@
 import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./App.css";
 import Header from "./components/Header";
 import HeroSection from "./components/HeroSection";
-import CreamBackground from "./components/CreamBackground"; // Import Background Component
+import CreamBackground from "./components/CreamBackground";
+import Login from "./LoginPage";
 
 function App() {
   return (
-    <CreamBackground> {/* Wrap everything inside CreamBackground */}
-      <div className="App">
-        <Header />
-        <HeroSection />
-      </div>
-    </CreamBackground>
+    <Router>
+      <CreamBackground>
+        <div className="App">
+          <Header />
+          <Routes>
+            <Route path="/" element={<HeroSection />} />
+            <Route path="/login" element={<Login />} />
+          </Routes>
+        </div>
+      </CreamBackground>
+    </Router>
   );
 }
 
