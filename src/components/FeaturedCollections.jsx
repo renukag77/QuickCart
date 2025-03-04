@@ -1,10 +1,27 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Heart, ShoppingCart } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
-const ProductCard = ({ image, name, currentPrice, originalPrice }) => {
+const ProductCard = ({ product }) => {
   const accentColor = "#722F37";
   const creamColor = "#EFDFBB";
+  const navigate = useNavigate();
+
+  const handleAddToCart = () => {
+    // Navigate to product details page with product info
+    navigate('/product', { 
+      state: { 
+        product: {
+          id: product.id || Math.random().toString(36).substr(2, 9),
+          name: product.name,
+          price: parseInt(product.currentPrice.replace(',', '')),
+          image: product.image,
+          originalPrice: product.originalPrice
+        }
+      } 
+    });
+  };
 
   return (
     <motion.div 
@@ -28,8 +45,8 @@ const ProductCard = ({ image, name, currentPrice, originalPrice }) => {
     >
       <div className="overflow-hidden relative">
         <motion.img 
-          src={image} 
-          alt={name} 
+          src={product.image} 
+          alt={product.name} 
           whileHover={{ scale: 1.1 }}
           transition={{ duration: 0.3 }}
           className="w-full h-64 object-cover transition-transform duration-300 group-hover:opacity-80"
@@ -45,6 +62,7 @@ const ProductCard = ({ image, name, currentPrice, originalPrice }) => {
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             className="bg-white p-3 rounded-full shadow-lg"
+            onClick={handleAddToCart}
           >
             <ShoppingCart className="text-black" />
           </motion.button>
@@ -58,6 +76,7 @@ const ProductCard = ({ image, name, currentPrice, originalPrice }) => {
         </motion.div>
       </div>
       
+      {/* Rest of the product card remains the same */}
       <motion.div 
         className="p-6 text-center"
         style={{ backgroundColor: accentColor }}
@@ -69,7 +88,7 @@ const ProductCard = ({ image, name, currentPrice, originalPrice }) => {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2 }}
         >
-          {name}
+          {product.name}
         </motion.h3>
         <motion.div 
           className="flex justify-center items-center space-x-2"
@@ -81,117 +100,94 @@ const ProductCard = ({ image, name, currentPrice, originalPrice }) => {
             className="text-lg font-semibold"
             style={{ color: creamColor }}
           >
-            ₹{currentPrice}
+            ₹{product.currentPrice}
           </span>
-          {originalPrice && (
+          {product.originalPrice && (
             <motion.span 
               className="text-gray-300 line-through text-sm ml-2"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.4 }}
             >
-              ₹{originalPrice}
+              ₹{product.originalPrice}
             </motion.span>
           )}
         </motion.div>
       </motion.div>
 
       {/* Discount Badge */}
-      {originalPrice && (
+      {product.originalPrice && (
         <motion.div 
           className="absolute top-4 right-4 bg-yellow-400 text-black px-3 py-1 rounded-full text-sm font-bold"
           initial={{ opacity: 0, x: 50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.5 }}
         >
-          {Math.round(((originalPrice.replace(',', '') - currentPrice.replace(',', '')) / originalPrice.replace(',', '')) * 100)}% OFF
+          {Math.round(((product.originalPrice.replace(',', '') - product.currentPrice.replace(',', '')) / product.originalPrice.replace(',', '')) * 100)}% OFF
         </motion.div>
       )}
     </motion.div>
   );
 };
 
-const FeaturedSofaCollections = ({ 
-  products = [
+const FeaturedCollections = () => {
+  const products = [
     {
+      id: 1,
       image: "/sofaset.png",
       name: "Luxury Sofa Set",
       currentPrice: "24,999",
       originalPrice: "32,999"
     },
     {
+      id: 2,
       image: "/sofa2.png",
       name: "Modern Leather Sofa",
       currentPrice: "18,499",
       originalPrice: "25,999"
     },
     {
+      id: 3,
       image: "/sofa3.png",
       name: "Classic Wooden Sofa",
       currentPrice: "15,999",
       originalPrice: "21,499"
     }
-  ]
-}) => {
+  ];
+
   const creamColor = "#EFDFBB";
   const accentColor = "#722F37";
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: { 
-      opacity: 1,
-      transition: {
-        delayChildren: 0.3,
-        staggerChildren: 0.2
-      }
-    }
-  };
-
   return (
     <motion.div 
-      initial="hidden"
-      animate="visible"
-      variants={containerVariants}
       className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16"
       style={{ backgroundColor: creamColor }}
     >
       <div className="container mx-auto">
         <motion.h2 
-          initial={{ opacity: 0, y: -50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
           className="text-center text-4xl font-bold mb-4"
           style={{ color: accentColor }}
         >
           Featured Sofa Collections
         </motion.h2>
         <motion.p 
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
           className="text-center text-lg mb-12 max-w-2xl mx-auto"
           style={{ color: `${accentColor}80` }}
         >
           Elegant and Comfortable Sofa Sets
         </motion.p>
         
-        <motion.div 
-          variants={containerVariants}
-          className="grid grid-cols-1 md:grid-cols-3 gap-8"
-        >
-          {products.map((product, index) => (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {products.map((product) => (
             <ProductCard 
-              key={index}
-              image={product.image}
-              name={product.name}
-              currentPrice={product.currentPrice}
-              originalPrice={product.originalPrice}
+              key={product.id}
+              product={product}
             />
           ))}
-        </motion.div>
+        </div>
       </div>
     </motion.div>
   );
 };
 
-export default FeaturedSofaCollections;
+export default FeaturedCollections;
