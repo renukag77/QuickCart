@@ -11,6 +11,7 @@ import ProductDetailsPage from "./ProductDetailsPage";
 import BedroomFurniture from "./components/BedroomFurniture";
 import DiningRoomFurniture from "./components/DiningRoomFurniture";
 import LivingRoomFurniture from "./components/LivingRoomFurniture";
+import Checkout from "./Checkout"; // Import Checkout page
 
 function Home({ onAddToCart }) {
   return (
@@ -52,22 +53,15 @@ function App() {
     setCartItems((prevCart) => prevCart.filter((item) => item.id !== id));
   };
 
-  // Function to handle quantity update from UI
-  const handleUpdateQuantity = (id, newQuantity) => {
-    updateQuantity(id, newQuantity);
-  };
-
-  // Function to handle item removal from UI
-  const handleRemoveItem = (id) => {
-    removeItem(id);
-  };
-
   // Function to add items to cart
   const addToCart = (product) => {
     const productWithId = {
       ...product,
       id: product.id || `product-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-      currentPrice: parseInt(product.currentPrice.replace(',', '')) || product.price || 0,
+      currentPrice:
+        typeof product.currentPrice === "string"
+          ? parseInt(product.currentPrice.replace(',', ''), 10)
+          : product.currentPrice || product.price || 0, // Handle numbers or missing prices
     };
   
     const existingItem = cartItems.find(
@@ -89,7 +83,6 @@ function App() {
     localStorage.setItem("cartItems", JSON.stringify(updatedCart)); // Save instantly
   };
   
-  
 
   return (
     <Router>
@@ -97,8 +90,8 @@ function App() {
         <div className="App">
           <Header
             cartItems={cartItems}
-            updateQuantity={handleUpdateQuantity}
-            removeItem={handleRemoveItem}
+            updateQuantity={updateQuantity}
+            removeItem={removeItem}
           />
           <Routes>
             <Route path="/" element={<Home onAddToCart={addToCart} />} />
@@ -107,6 +100,16 @@ function App() {
             <Route path="/bedroom-furniture" element={<BedroomFurniture onAddToCart={addToCart} />} />
             <Route path="/dining-room-furniture" element={<DiningRoomFurniture onAddToCart={addToCart} />} />
             <Route path="/living-room-furniture" element={<LivingRoomFurniture onAddToCart={addToCart} />} />
+            <Route
+              path="/checkout"
+              element={
+                <Checkout
+                  cartItems={cartItems}
+                  updateQuantity={updateQuantity}
+                  removeItem={removeItem}
+                />
+              }
+            />
           </Routes>
         </div>
       </CreamBackground>

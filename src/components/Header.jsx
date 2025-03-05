@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Search, ShoppingCart, User, Menu, X, Minus, Plus, Trash2 } from 'lucide-react';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 // Cart Item Component
 const CartItem = ({ item, onUpdateQuantity, onRemove }) => {
@@ -45,11 +45,13 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }) => {
 };
 // Main Header Component
 const Header = ({ cartItems, updateQuantity, removeItem }) => {
+    const navigate = useNavigate();
   // State Management
   const [isScrolled, setIsScrolled] = useState(false);
   const [showBanner, setShowBanner] = useState(true);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  
 
   // Scroll Effect
   useEffect(() => {
@@ -80,6 +82,10 @@ const Header = ({ cartItems, updateQuantity, removeItem }) => {
   const safeCartItems = Array.isArray(cartItems) ? cartItems : [];
   const handleUpdateQuantity = (id, newQuantity) => {
     if (updateQuantity) updateQuantity(id, newQuantity);
+  };
+
+  const handleCheckout = () => {
+    navigate('/checkout', { state: { cartItems } });
   };
   
   const handleRemoveItem = (id) => {
@@ -270,10 +276,7 @@ const Header = ({ cartItems, updateQuantity, removeItem }) => {
             className="bg-white rounded-lg shadow-xl w-[500px] max-h-[80vh] overflow-y-auto p-6 relative"
             onClick={(e) => e.stopPropagation()}
           >
-            <button 
-              className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
-              onClick={() => setIsCartOpen(false)}
-            >
+            <button className="absolute top-4 right-4" onClick={() => setIsCartOpen(false)}>
               <X size={24} />
             </button>
             
@@ -294,20 +297,12 @@ const Header = ({ cartItems, updateQuantity, removeItem }) => {
   />
 ))}
                 
-                <div className="mt-4 flex justify-between items-center">
-                  <span className="font-bold text-lg">Subtotal</span>
+                <div className="mt-4 flex justify-between">
+                  <span className="font-bold text-lg">Total</span>
                   <span className="font-bold text-lg">₹ {calculateTotal().toLocaleString()}</span>
                 </div>
-                
-                <div className="mt-2 flex justify-between items-center text-xl font-extrabold">
-                  <span>Total</span>
-                  <span>₹ {calculateTotal().toLocaleString()}</span>
-                </div>
-                
-                <button 
-                  className="w-full bg-[#722F37] text-white py-3 rounded-lg mt-4 hover:bg-[#5a252d] transition-colors"
-                >
-                  Continue to Checkout
+                <button onClick={handleCheckout} className="w-full bg-[#722F37] text-white py-3 rounded-lg mt-4">
+                  Proceed to Checkout
                 </button>
               </>
             )}
