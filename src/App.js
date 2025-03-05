@@ -67,13 +67,13 @@ function App() {
     const productWithId = {
       ...product,
       id: product.id || `product-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-      currentPrice: product.currentPrice || product.price || 0,
+      currentPrice: parseInt(product.currentPrice.replace(',', '')) || product.price || 0,
     };
-
+  
     const existingItem = cartItems.find(
       (item) => item.id === productWithId.id && item.selectedColor === productWithId.selectedColor
     );
-
+  
     let updatedCart;
     if (existingItem) {
       updatedCart = cartItems.map((item) =>
@@ -81,15 +81,14 @@ function App() {
           ? { ...item, quantity: item.quantity + (productWithId.quantity || 1) }
           : item
       );
-
-      handleUpdateQuantity(productWithId.id, existingItem.quantity + (productWithId.quantity || 1));
     } else {
       updatedCart = [...cartItems, { ...productWithId, quantity: productWithId.quantity || 1 }];
     }
-
+  
     setCartItems(updatedCart);
     localStorage.setItem("cartItems", JSON.stringify(updatedCart)); // Save instantly
   };
+  
 
   return (
     <Router>
