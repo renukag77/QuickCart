@@ -1,6 +1,7 @@
 import React from 'react';
 import { ChevronRight, ShoppingCart, Star } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 
 // Importing images from the public folder
 const heroImages = [
@@ -30,6 +31,7 @@ const FurnitureLanding = ({
     { name: "Dining Room", image: heroImages[5] }
   ]
 }) => {
+  const navigate = useNavigate();
   const creamColor = "#EFDFBB";
   const accentColor = "#722F37";
 
@@ -195,39 +197,38 @@ const FurnitureLanding = ({
 
       {/* Categories Section */}
       <motion.div 
-        variants={itemVariants}
-        className="py-16"
+      variants={{ hidden: { opacity: 0 }, visible: { opacity: 1 } }}
+      className="py-16"
+    >
+      <motion.h2 
+        className="text-center text-4xl font-bold mb-6"
+        style={{ color: accentColor }}
       >
-        <motion.h2 
-          variants={itemVariants}
-          className="text-center text-4xl font-bold mb-6"
-          style={{ color: accentColor }}
-        >
-          Choose Your Category
-        </motion.h2>
-        <motion.p 
-          variants={itemVariants}
-          className="text-center text-lg mb-12 max-w-2xl mx-auto"
-          style={{ color: `${accentColor}80` }}
-        >
-          Select your perfect piece from our carefully curated category options
-        </motion.p>
-        
-        <motion.div 
-          variants={itemVariants}
-          className="grid md:grid-cols-3 gap-8"
-        >
-          {categories.map((category, index) => (
-            
+        Choose Your Category
+      </motion.h2>
+      <motion.p 
+        className="text-center text-lg mb-12 max-w-2xl mx-auto"
+        style={{ color: `${accentColor}80` }}
+      >
+        Select your perfect piece from our carefully curated category options
+      </motion.p>
+      
+      <motion.div 
+        className="grid md:grid-cols-3 gap-8"
+      >
+        {categories.map((category, index) => {
+          let routePath = "/";
+          if (category.name === "Living Room") routePath = "/living-room-furniture";
+          if (category.name === "Bedroom") routePath = "/bedroom-furniture";
+          if (category.name === "Dining Room") routePath = "/dining-room-furniture";
+
+          return (
             <motion.div 
               key={index} 
-              variants={itemVariants}
               whileHover={{ scale: 1.05 }}
               className="bg-white rounded-lg shadow-lg overflow-hidden group cursor-pointer transition-all duration-300"
-              style={{ 
-                border: `2px solid ${accentColor}20`,
-                backgroundColor: 'white'
-              }}
+              style={{ border: `2px solid ${accentColor}20`, backgroundColor: 'white' }}
+              onClick={() => navigate(routePath)}
             >
               <div className="overflow-hidden">
                 <motion.img 
@@ -249,7 +250,8 @@ const FurnitureLanding = ({
                 </h3>
               </div>
             </motion.div>
-          ))}
+          );
+        })}
         </motion.div>
       </motion.div>
     </motion.div>
