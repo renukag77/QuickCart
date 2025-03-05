@@ -89,6 +89,7 @@ function App() {
     localStorage.setItem("cartItems", JSON.stringify(updatedCart)); // Save instantly
   };
   
+  
 
   return (
     <Router>
