@@ -3,23 +3,63 @@ import { motion } from 'framer-motion';
 import { Heart, ShoppingCart } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
+const products = [
+  {
+    id: 1,
+    image: "/sofaset.png",
+    name: "Luxury Sofa Set",
+    currentPrice: "24,999",
+    originalPrice: "32,999",
+    description: "Elevate your living space with this luxurious sofa set. Crafted with premium materials and elegant design, this sofa offers both comfort and sophistication. Perfect for modern and classic interiors.",
+    colors: [
+      { name: 'beige', hex: '#F5E6D3' },
+      { name: 'green', hex: '#2F4F4F' },
+      { name: 'blue', hex: '#4169E1' }
+    ],
+    stock: 15,
+    thumbnails: ["/sofaset.png", "/sofaset-alt1.png", "/sofaset-alt2.png"]
+  },
+  {
+    id: 2,
+    image: "/sofa2.png",
+    name: "Modern Leather Sofa",
+    currentPrice: "18,499",
+    originalPrice: "25,999",
+    description: "Experience modern comfort with this sleek leather sofa. Designed for contemporary spaces, it combines minimalist aesthetics with exceptional comfort and durability.",
+    colors: [
+      { name: 'brown', hex: '#8B4513' },
+      { name: 'black', hex: '#000000' },
+      { name: 'cream', hex: '#FFFDD0' }
+    ],
+    stock: 8,
+    thumbnails: ["/sofa2.png", "/sofa2-alt1.png", "/sofa2-alt2.png"]
+  },
+  {
+    id: 3,
+    image: "/sofa3.png",
+    name: "Classic Wooden Sofa",
+    currentPrice: "15,999",
+    originalPrice: "21,499",
+    description: "A timeless wooden sofa that brings warmth and elegance to any living space. Handcrafted with attention to detail, this sofa combines traditional craftsmanship with modern comfort.",
+    colors: [
+      { name: 'walnut', hex: '#5D4037' },
+      { name: 'oak', hex: '#C19A6B' },
+      { name: 'mahogany', hex: '#8B4513' }
+    ],
+    stock: 12,
+    thumbnails: ["/sofa3.png", "/sofa3-alt1.png", "/sofa3-alt2.png"]
+  }
+];
+
 const ProductCard = ({ product }) => {
   const accentColor = "#722F37";
   const creamColor = "#EFDFBB";
   const navigate = useNavigate();
 
   const handleAddToCart = () => {
-    // Navigate to product details page with product info
+    // Navigate to product details page with complete product info
     navigate('/product', { 
-      state: { 
-        product: {
-          id: product.id || Math.random().toString(36).substr(2, 9),
-          name: product.name,
-          price: parseInt(product.currentPrice.replace(',', '')),
-          image: product.image,
-          originalPrice: product.originalPrice
-        }
-      } 
+      state: { product }
     });
   };
 
@@ -76,7 +116,7 @@ const ProductCard = ({ product }) => {
         </motion.div>
       </div>
       
-      {/* Rest of the product card remains the same */}
+      {/* Product Details */}
       <motion.div 
         className="p-6 text-center"
         style={{ backgroundColor: accentColor }}
@@ -131,30 +171,6 @@ const ProductCard = ({ product }) => {
 };
 
 const FeaturedCollections = () => {
-  const products = [
-    {
-      id: 1,
-      image: "/sofaset.png",
-      name: "Luxury Sofa Set",
-      currentPrice: "24,999",
-      originalPrice: "32,999"
-    },
-    {
-      id: 2,
-      image: "/sofa2.png",
-      name: "Modern Leather Sofa",
-      currentPrice: "18,499",
-      originalPrice: "25,999"
-    },
-    {
-      id: 3,
-      image: "/sofa3.png",
-      name: "Classic Wooden Sofa",
-      currentPrice: "15,999",
-      originalPrice: "21,499"
-    }
-  ];
-
   const creamColor = "#EFDFBB";
   const accentColor = "#722F37";
 

@@ -1,162 +1,303 @@
-import React, { useState } from 'react';
-import { Search, ShoppingCart } from 'lucide-react';
+import React, { useState, useMemo } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Search, ShoppingCart, Heart, ChevronLeft, ChevronRight } from 'lucide-react';
 
-const ProductDetailsPage = () => {
+const ProductDetailsPage = ({ onAddToCart })=> {
+  const location = useLocation();
+  const navigate = useNavigate();
+  
+  // Extract product details from route state
+  const { product } = location.state || {};
+
+  // Default product in case no product is passed
+  const defaultProduct = {
+    name: "Product Not Found",
+    image: "/api/placeholder/500/500",
+    currentPrice: "0",
+    originalPrice: "0",
+    description: "No product details available.",
+    colors: [{ name: 'default', hex: '#CCCCCC' }],
+    stock: 0,
+    thumbnails: ["/api/placeholder/500/500"]
+  };
+
+  // Use the passed product or default product
+  const selectedProduct = product || defaultProduct;
+
+  // Initialize state hooks
   const [quantity, setQuantity] = useState(1);
-  const [selectedColor, setSelectedColor] = useState('beige');
+  const [selectedColor, setSelectedColor] = useState(selectedProduct.colors[0].name);
+  const [mainImage, setMainImage] = useState(selectedProduct.image);
+  const [searchQuery, setSearchQuery] = useState('');
 
-  const colors = [
-    { name: 'beige', hex: '#F5E6D3' },
-    { name: 'green', hex: '#2F4F4F' },
-    { name: 'blue', hex: '#4169E1' }
-  ];
+  // Redirect to home if no product found and using default product
+  useMemo(() => {
+    if (!product) {
+      navigate('/');
+    }
+  }, [product, navigate]);
+
+  const handleAddToCart = () => {
+    // Create a cart item with selected details
+    const cartItem = {
+      ...selectedProduct,
+      quantity: quantity,
+      selectedColor: selectedColor
+    };
+
+    // Call the onAddToCart function passed from App
+    onAddToCart(cartItem);
+  };
+
+  const pageVariants = {
+    initial: { opacity: 0, y: 50 },
+    in: { opacity: 1, y: 0 },
+    out: { opacity: 0, y: -50 }
+  };
+
+  const pageTransition = {
+    type: "tween",
+    ease: "anticipate",
+    duration: 0.5
+  };
 
   return (
-    <div className="min-h-screen bg-[#EFDFBB] py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-5xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
+    <motion.div 
+      initial="initial"
+      animate="in"
+      exit="out"
+      variants={pageVariants}
+      transition={pageTransition}
+      className="min-h-screen bg-[#EFDFBB] py-12 px-4 sm:px-6 lg:px-8"
+    >
+      <div className="max-w-6xl mx-auto bg-white shadow-2xl rounded-2xl overflow-hidden relative">
         {/* Top Banner Section */}
-        <div className="bg-[#722F37] text-white py-4 px-6">
-          <h1 className="text-2xl font-bold">Product Details</h1>
-          <p className="text-sm text-gray-200">
-            Lorem ipsum dolor sit amet, consectetur adipiscing scelerisque a tincidunt urna nisl quam orci males
-          </p>
-        </div>
+        <motion.div 
+          initial={{ opacity: 0, y: -50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="bg-[#722F37] text-white py-6 px-8 flex justify-between items-center"
+        >
+          <div>
+            <h1 className="text-3xl font-bold">{selectedProduct.name}</h1>
+            <p className="text-sm text-gray-200 mt-2">
+              Discover the perfect blend of style, comfort, and quality
+            </p>
+          </div>
+          
+          {/* Search Bar */}
+          <div className="relative w-80">
+            <input 
+              type="text" 
+              placeholder="Search products..." 
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-4 pr-10 py-2 rounded-full text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#722F37]"
+            />
+            <motion.button 
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              className="absolute right-2 top-1/2 transform -translate-y-1/2 text-[#722F37]"
+            >
+              <Search size={20} />
+            </motion.button>
+          </div>
+        </motion.div>
 
         {/* Main Content */}
-        <div className="grid md:grid-cols-2 gap-8 p-8">
+        <div className="grid md:grid-cols-2 gap-12 p-12">
           {/* Product Image Section */}
-          <div className="flex flex-col items-center">
-            <div className="w-full max-w-md mb-4">
-              <img 
-                src="/api/placeholder/500/500" 
-                alt="Accent Leisure Chair" 
-                className="w-full h-auto object-cover rounded-lg shadow-md"
+          <motion.div 
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.3 }}
+            className="flex flex-col items-center"
+          >
+            <motion.div 
+              className="w-full max-w-md mb-6 relative"
+              initial={{ scale: 0.9 }}
+              animate={{ scale: 1 }}
+              transition={{ type: "spring", stiffness: 300 }}
+            >
+              <motion.img 
+                src={mainImage} 
+                alt={selectedProduct.name} 
+                className="w-full h-auto object-cover rounded-2xl shadow-2xl"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5 }}
               />
-            </div>
-            <div className="flex space-x-4">
-              {[1, 2, 3].map((index) => (
-                <img 
+              {/* Wishlist Button */}
+              <motion.button 
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                className="absolute top-4 right-4 bg-white p-3 rounded-full shadow-lg"
+              >
+                <Heart className="text-red-500" />
+              </motion.button>
+            </motion.div>
+
+            {/* Thumbnail Navigation */}
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.5 }}
+              className="flex space-x-4 items-center"
+            >
+              <motion.button 
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                className="text-[#722F37]"
+              >
+                <ChevronLeft size={24} />
+              </motion.button>
+              
+              {selectedProduct.thumbnails.map((thumbnail, index) => (
+                <motion.img 
                   key={index}
-                  src="/api/placeholder/100/100" 
-                  alt={`Product Thumbnail ${index}`} 
+                  src={thumbnail} 
+                  alt={`${selectedProduct.name} Thumbnail ${index + 1}`} 
                   className="w-20 h-20 object-cover rounded-md cursor-pointer hover:opacity-75 transition"
+                  onClick={() => setMainImage(thumbnail)}
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
                 />
               ))}
-            </div>
-          </div>
+              
+              <motion.button 
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                className="text-[#722F37]"
+              >
+                <ChevronRight size={24} />
+              </motion.button>
+            </motion.div>
+          </motion.div>
 
           {/* Product Details Section */}
-          <div>
-            <h2 className="text-3xl font-bold text-[#722F37] mb-4">Accent Leisure Chairs</h2>
+          <motion.div 
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.4 }}
+          >
+            <h2 className="text-4xl font-bold text-[#722F37] mb-6">{selectedProduct.name}</h2>
             
             {/* Price */}
-            <div className="mb-4">
-              <span className="text-2xl font-semibold text-[#722F37]">₹ 65.35</span>
-              <span className="ml-4 line-through text-gray-500">₹ 102.35</span>
-            </div>
+            <motion.div 
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.5 }}
+              className="mb-6 flex items-center space-x-4"
+            >
+              <span className="text-3xl font-semibold text-[#722F37]">₹ {selectedProduct.currentPrice}</span>
+              <span className="line-through text-gray-500 text-xl">₹ {selectedProduct.originalPrice}</span>
+              <span className="bg-green-500 text-white px-3 py-1 rounded-full text-sm">
+                {Math.round(((selectedProduct.originalPrice.replace(',', '') - selectedProduct.currentPrice.replace(',', '')) / selectedProduct.originalPrice.replace(',', '')) * 100)}% OFF
+              </span>
+            </motion.div>
 
             {/* Description */}
-            <p className="text-gray-600 mb-6">
-              Furniture best dolor sit amet, consectetur adipiscing Ornare vitae cursus pharetra purus. Ut enim sed id amet bibendum amet, vestibulum. Sed morbi site
-            </p>
+            <motion.p 
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.6 }}
+              className="text-gray-600 mb-6 text-lg leading-relaxed"
+            >
+              {selectedProduct.description}
+            </motion.p>
 
-            {/* Delivery Info */}
-            <div className="mb-4">
-              <p className="font-medium">
-                Delivery: <span className="text-green-600">Free delivery (over ₹50)</span>
+            {/* Delivery & Stock Info */}
+            <motion.div 
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.7 }}
+              className="mb-6 space-y-2"
+            >
+              <p className="font-medium flex items-center">
+                <span className="mr-2 text-green-600">●</span>
+                Delivery: Free delivery (over ₹50)
               </p>
-              <p className="font-medium">
-                Stock: <span className="text-[#722F37]">12 Available</span>
+              <p className="font-medium flex items-center">
+                <span className="mr-2 text-[#722F37]">●</span>
+                Stock: {selectedProduct.stock} Available
               </p>
-            </div>
+            </motion.div>
 
             {/* Color Selection */}
-            <div className="mb-4">
-              <h3 className="font-medium mb-2">Color</h3>
-              <div className="flex space-x-3">
-                {colors.map((color) => (
-                  <button
+            <motion.div 
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.8 }}
+              className="mb-6"
+            >
+              <h3 className="font-medium mb-3 text-lg">Color</h3>
+              <div className="flex space-x-4">
+                {selectedProduct.colors.map((color) => (
+                  <motion.button
                     key={color.name}
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
                     onClick={() => setSelectedColor(color.name)}
-                    className={`w-10 h-10 rounded-full border-2 transition-all duration-300 ${
+                    className={`w-12 h-12 rounded-full border-2 transition-all duration-300 ${
                       selectedColor === color.name 
-                        ? 'border-[#722F37] scale-110' 
+                        ? 'border-[#722F37] scale-110 shadow-lg' 
                         : 'border-transparent hover:border-gray-300'
                     }`}
                     style={{ backgroundColor: color.hex }}
                   />
                 ))}
               </div>
-            </div>
+            </motion.div>
 
             {/* Quantity Selector */}
-            <div className="mb-6">
-              <h3 className="font-medium mb-2">Quantity</h3>
-              <div className="flex items-center">
-                <button 
+            <motion.div 
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.9 }}
+              className="mb-8"
+            >
+              <h3 className="font-medium mb-3 text-lg">Quantity</h3>
+              <div className="flex items-center space-x-4">
+                <motion.button 
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  className="bg-[#722F37] text-white px-3 py-1 rounded-l"
+                  className="bg-[#722F37] text-white px-4 py-2 rounded-l-lg"
                 >
                   -
-                </button>
+                </motion.button>
                 <input 
                   type="number" 
                   value={quantity} 
                   readOnly
-                  className="w-16 text-center border py-1"
+                  className="w-20 text-center border-y py-2"
                 />
-                <button 
+                <motion.button 
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
                   onClick={() => setQuantity(quantity + 1)}
-                  className="bg-[#722F37] text-white px-3 py-1 rounded-r"
+                  className="bg-[#722F37] text-white px-4 py-2 rounded-r-lg"
                 >
                   +
-                </button>
+                </motion.button>
               </div>
-            </div>
+            </motion.div>
 
             {/* Add to Cart Button */}
-            <button 
-              className="w-full bg-[#722F37] text-white py-3 rounded-lg hover:bg-[#5a252d] transition-colors flex items-center justify-center"
+            <motion.button 
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={handleAddToCart}
+              className="w-full bg-[#722F37] text-white py-4 rounded-lg hover:bg-[#5a252d] transition-colors flex items-center justify-center text-lg space-x-3"
             >
-              <ShoppingCart className="mr-2" /> Add to Cart
-            </button>
-          </div>
-        </div>
-
-        {/* Sidebar - Search and Categories */}
-        <div className="absolute top-36 right-8 w-64 bg-white shadow-lg rounded-lg p-6">
-          {/* Search */}
-          <div className="mb-6">
-            <h3 className="text-lg font-semibold mb-3">Search</h3>
-            <div className="relative">
-              <input 
-                type="text" 
-                placeholder="Keywords here" 
-                className="w-full border rounded-md py-2 px-3 pr-10"
-              />
-              <button className="absolute right-3 top-1/2 transform -translate-y-1/2">
-                <Search />
-              </button>
-            </div>
-          </div>
-
-          {/* Categories */}
-          <div>
-            <h3 className="text-lg font-semibold mb-3">Categories</h3>
-            <ul className="space-y-2">
-              {['Chair', 'Bed', 'Sofa', 'Table', 'Side Drawer', 'Dining Chair'].map((category) => (
-                <li 
-                  key={category} 
-                  className="text-gray-600 hover:text-[#722F37] transition cursor-pointer"
-                >
-                  {category}
-                </li>
-              ))}
-            </ul>
-          </div>
+              <ShoppingCart size={24} /> 
+              <span>Add to Cart</span>
+            </motion.button>
+          </motion.div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
