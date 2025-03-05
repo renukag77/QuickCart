@@ -159,7 +159,7 @@ const Header = ({ cartItems, updateQuantity, removeItem }) => {
               {['Home', 'Pages', 'About', 'Contact'].map((item, index) => (
                 <a 
                   key={index} 
-                  href="#" 
+                  href="/" 
                   className="font-medium hover:text-gray-200 transition-colors duration-300 relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bg-white after:left-0 after:-bottom-1 after:transition-all hover:after:w-full"
                 >
                   {item}
