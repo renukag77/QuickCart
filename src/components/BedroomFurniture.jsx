@@ -3,59 +3,65 @@ import { motion } from 'framer-motion';
 import { ShoppingCart, Heart } from 'lucide-react';
 
 const bedroomImages = [
-  "/bed1.jpg",
-  "/bed2.jpg", 
-  "/bed3.jpg",
-  "/bed4.jpg",
-  "/bed5.jpg",
-  "/bed6.jpg"
+  "/Bedroom1.avif",
+  "/Bedroom2.avif", 
+  "/Bedroom3.avif",
+  "/Bedroom4.avif",
+  "/Bedroom5.avif",
+  "/Bedroom6.avif"
 ];
 
-const BedroomFurniture = () => {
+const BedroomFurniture = ({ onAddToCart }) => {
   const [favorites, setFavorites] = useState([]);
 
   const furnitureItems = [
     {
-      id: 1,
+      id: 'bedroom-1',
       name: "Minimalist Bed Frame",
       description: "Sleek design with wooden accents",
-      price: 899.99,
-      image: bedroomImages[0]
+      price: 89999, // Price in INR
+      image: bedroomImages[0],
+      category: "Bedroom"
     },
     {
-      id: 2,
+      id: 'bedroom-2',
       name: "Modern Nightstand",
       description: "Compact storage with clean lines",
-      price: 249.99,
-      image: bedroomImages[1]
+      price: 24999, // Price in INR
+      image: bedroomImages[1],
+      category: "Bedroom"
     },
     {
-      id: 3,
+      id: 'bedroom-3',
       name: "Plush Bedroom Armchair",
       description: "Comfortable reading corner piece",
-      price: 599.99,
-      image: bedroomImages[2]
+      price: 59999, // Price in INR
+      image: bedroomImages[2],
+      category: "Bedroom"
     },
     {
-      id: 4,
+      id: 'bedroom-4',
       name: "Elegant Dresser",
       description: "Spacious storage with smooth drawers",
-      price: 749.99,
-      image: bedroomImages[3]
+      price: 74999, // Price in INR
+      image: bedroomImages[3],
+      category: "Bedroom"
     },
     {
-      id: 5,
+      id: 'bedroom-5',
       name: "Minimalist Wardrobe",
       description: "Spacious and stylish clothing storage",
-      price: 1299.99,
-      image: bedroomImages[4]
+      price: 129999, // Price in INR
+      image: bedroomImages[4],
+      category: "Bedroom"
     },
     {
-      id: 6,
+      id: 'bedroom-6',
       name: "Comfort Bed Bench",
       description: "Perfect end-of-bed seating",
-      price: 399.99,
-      image: bedroomImages[5]
+      price: 39999, // Price in INR
+      image: bedroomImages[5],
+      category: "Bedroom"
     }
   ];
 
@@ -65,6 +71,19 @@ const BedroomFurniture = () => {
         ? prev.filter(id => id !== itemId)
         : [...prev, itemId]
     );
+  };
+
+  const handleAddToCart = (item) => {
+    // Prepare the product object for adding to cart
+    const productToAdd = {
+      ...item,
+      quantity: 1,
+      currentPrice: item.price, // Use the INR price
+      selectedColor: null
+    };
+
+    // Call the onAddToCart function passed from parent
+    onAddToCart(productToAdd);
   };
 
   return (
@@ -118,9 +137,10 @@ const BedroomFurniture = () => {
                     className="text-2xl font-bold"
                     style={{ color: "#722F37" }}
                   >
-                    ${item.price.toFixed(2)}
+                    ₹ {item.price.toLocaleString()}
                   </span>
                   <button 
+                    onClick={() => handleAddToCart(item)}
                     className="px-4 py-2 rounded-md flex items-center"
                     style={{ 
                       backgroundColor: "#722F37", 

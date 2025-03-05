@@ -218,6 +218,7 @@ const FurnitureLanding = ({
           className="grid md:grid-cols-3 gap-8"
         >
           {categories.map((category, index) => (
+            
             <motion.div 
               key={index} 
               variants={itemVariants}

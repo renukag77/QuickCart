@@ -30,7 +30,7 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }) => {
                 <Plus size={16} />
               </button>
             </div>
-            <span className="font-semibold">₹ {(item.price * item.quantity).toLocaleString()}</span>
+            <span className="font-semibold">₹ {(item.currentPrice * item.quantity).toLocaleString()}</span>
           </div>
         </div>
       </div>
@@ -43,30 +43,13 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }) => {
     </div>
   );
 };
-
 // Main Header Component
-const Header = () => {
+const Header = ({ cartItems, updateQuantity, removeItem }) => {
   // State Management
   const [isScrolled, setIsScrolled] = useState(false);
   const [showBanner, setShowBanner] = useState(true);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const [cartItems, setCartItems] = useState([
-    {
-      id: 1,
-      name: "Accent Leisure Chair",
-      price: 6535,
-      quantity: 1,
-      image: "https://example.com/chair-image.jpg"
-    },
-    {
-      id: 2,
-      name: "Modern Wooden Table",
-      price: 9999,
-      quantity: 2,
-      image: "https://example.com/table-image.jpg"
-    }
-  ]);
 
   // Scroll Effect
   useEffect(() => {
@@ -89,32 +72,7 @@ const Header = () => {
 
   // Cart Functionality
   const calculateTotal = () => {
-    return cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
-  };
-
-  const updateQuantity = (id, newQuantity) => {
-    setCartItems(cartItems.map(item => 
-      item.id === id ? { ...item, quantity: newQuantity } : item
-    ));
-  };
-
-  const removeItem = (id) => {
-    setCartItems(cartItems.filter(item => item.id !== id));
-  };
-
-  // Add to Cart Method (to be used in product pages)
-  const addToCart = (product) => {
-    const existingItem = cartItems.find(item => item.id === product.id);
-    
-    if (existingItem) {
-      setCartItems(cartItems.map(item => 
-        item.id === product.id 
-          ? { ...item, quantity: item.quantity + 1 }
-          : item
-      ));
-    } else {
-      setCartItems([...cartItems, { ...product, quantity: 1 }]);
-    }
+    return cartItems.reduce((total, item) => total + (item.currentPrice * item.quantity), 0);
   };
 
   return (
@@ -326,6 +284,11 @@ const Header = () => {
                 <div className="mt-4 flex justify-between items-center">
                   <span className="font-bold text-lg">Subtotal</span>
                   <span className="font-bold text-lg">₹ {calculateTotal().toLocaleString()}</span>
+                </div>
+                
+                <div className="mt-2 flex justify-between items-center text-xl font-extrabold">
+                  <span>Total</span>
+                  <span>₹ {calculateTotal().toLocaleString()}</span>
                 </div>
                 
                 <button 

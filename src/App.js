@@ -8,13 +8,16 @@ import CreamBackground from "./components/CreamBackground";
 import Login from "./LoginPage";
 import FeaturedCollections from "./components/FeaturedCollections";
 import ProductDetailsPage from "./ProductDetailsPage";
+import BedroomFurniture from './components/BedroomFurniture';
+import DiningRoomFurniture from './components/DiningRoomFurniture';
+import LivingRoomFurniture from "./components/LivingRoomFurniture";
 
-function Home() {
+function Home({ onAddToCart }) {
   return (
     <>
       <HeroSection />
-      <FurnitureUI />
-      <FeaturedCollections />
+      <FurnitureUI onAddToCart={onAddToCart} />
+      <FeaturedCollections onAddToCart={onAddToCart} />
     </>
   );
 }
@@ -23,16 +26,29 @@ function App() {
   const [cartItems, setCartItems] = useState([]);
 
   const addToCart = (product) => {
-    const existingItem = cartItems.find(item => item.id === product.id);
+    // Ensure product has an id and currentPrice, create one if not exists
+    const productWithId = {
+      ...product,
+      id: product.id || `product-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      currentPrice: product.currentPrice || product.price || 0
+    };
+
+    const existingItem = cartItems.find(item => 
+      item.id === productWithId.id && 
+      item.selectedColor === productWithId.selectedColor
+    );
     
     if (existingItem) {
       setCartItems(cartItems.map(item => 
-        item.id === product.id 
-          ? { ...item, quantity: item.quantity + 1 }
+        item.id === productWithId.id && item.selectedColor === productWithId.selectedColor
+          ? { ...item, quantity: item.quantity + (productWithId.quantity || 1) }
           : item
       ));
     } else {
-      setCartItems([...cartItems, { ...product, quantity: 1 }]);
+      setCartItems([...cartItems, { 
+        ...productWithId, 
+        quantity: productWithId.quantity || 1 
+      }]);
     }
   };
 
@@ -58,7 +74,7 @@ function App() {
           <Routes>
             <Route 
               path="/" 
-              element={<Home />} 
+              element={<Home onAddToCart={addToCart} />} 
             />
             <Route 
               path="/login" 
@@ -67,6 +83,18 @@ function App() {
             <Route 
               path="/product" 
               element={<ProductDetailsPage onAddToCart={addToCart} />} 
+            />
+            <Route 
+              path="/bedroom-furniture" 
+              element={<BedroomFurniture onAddToCart={addToCart} />} 
+            />
+            <Route 
+              path="/dining-room-furniture" 
+              element={<DiningRoomFurniture onAddToCart={addToCart} />} 
+            />
+            <Route 
+              path="/living-room-furniture" 
+              element={<LivingRoomFurniture onAddToCart={addToCart} />} 
             />
           </Routes>
         </div>

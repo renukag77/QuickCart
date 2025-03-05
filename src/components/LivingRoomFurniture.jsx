@@ -3,58 +3,58 @@ import { motion } from 'framer-motion';
 import { ShoppingCart, Heart } from 'lucide-react';
 
 const livingRoomImages = [
-  "/sofa1.jpg",
-  "/sofa2.jpg", 
-  "/sofa3.jpg",
-  "/coffeetable1.jpg",
-  "/coffeetable2.jpg",
-  "/coffeetable3.jpg"
+  "/Living1.jpg",
+  "/Living2.avif", 
+  "/Living3.avif",
+  "/Living4.avif",
+  "/Living5.avif",
+  "/Living6.avif"
 ];
 
-const LivingRoomFurniture = () => {
+const LivingRoomFurniture = ({ onAddToCart }) => {
   const [favorites, setFavorites] = useState([]);
 
   const furnitureItems = [
     {
-      id: 1,
+      id: 'living-1',
       name: "Modern Sectional Sofa",
       description: "Spacious L-shaped design with premium fabric",
-      price: 1999.99,
+      currentPrice: 1999.99,
       image: livingRoomImages[0]
     },
     {
-      id: 2,
+      id: 'living-2',
       name: "Classic Leather Sofa",
       description: "Timeless design with genuine leather upholstery",
-      price: 1799.99,
+      currentPrice: 1799.99,
       image: livingRoomImages[1]
     },
     {
-      id: 3,
+      id: 'living-3',
       name: "Minimalist Loveseat",
       description: "Compact two-seater with clean lines",
-      price: 1299.99,
+      currentPrice: 1299.99,
       image: livingRoomImages[2]
     },
     {
-      id: 4,
+      id: 'living-4',
       name: "Marble Top Coffee Table",
       description: "Elegant table with luxurious marble surface",
-      price: 599.99,
+      currentPrice: 599.99,
       image: livingRoomImages[3]
     },
     {
-      id: 5,
+      id: 'living-5',
       name: "Wooden Industrial Coffee Table",
       description: "Rustic design with metal accents",
-      price: 449.99,
+      currentPrice: 449.99,
       image: livingRoomImages[4]
     },
     {
-      id: 6,
+      id: 'living-6',
       name: "Modern Glass Coffee Table",
       description: "Sleek design with tempered glass top",
-      price: 699.99,
+      currentPrice: 699.99,
       image: livingRoomImages[5]
     }
   ];
@@ -65,6 +65,18 @@ const LivingRoomFurniture = () => {
         ? prev.filter(id => id !== itemId)
         : [...prev, itemId]
     );
+  };
+
+  const handleAddToCart = (item) => {
+    // Prepare the product object for adding to cart
+    const productToAdd = {
+      ...item,
+      quantity: 1,
+      selectedColor: null // Add color if applicable
+    };
+
+    // Call the onAddToCart function passed from parent
+    onAddToCart(productToAdd);
   };
 
   return (
@@ -118,9 +130,10 @@ const LivingRoomFurniture = () => {
                     className="text-2xl font-bold"
                     style={{ color: "#722F37" }}
                   >
-                    ${item.price.toFixed(2)}
+                    ${item.currentPrice.toFixed(2)}
                   </span>
                   <button 
+                    onClick={() => handleAddToCart(item)}
                     className="px-4 py-2 rounded-md flex items-center"
                     style={{ 
                       backgroundColor: "#722F37", 
