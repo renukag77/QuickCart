@@ -72,8 +72,21 @@ const Header = ({ cartItems, updateQuantity, removeItem }) => {
 
   // Cart Functionality
   const calculateTotal = () => {
-    return cartItems.reduce((total, item) => total + (item.currentPrice * item.quantity), 0);
+    return cartItems.reduce((total, item) => {
+      return total + ((item.currentPrice || 0) * (item.quantity || 1));
+    }, 0);
   };
+
+  const safeCartItems = Array.isArray(cartItems) ? cartItems : [];
+  const handleUpdateQuantity = (id, newQuantity) => {
+    if (updateQuantity) updateQuantity(id, newQuantity);
+  };
+  
+  const handleRemoveItem = (id) => {
+    if (removeItem) removeItem(id);
+  };
+  
+
 
   return (
     <div className="w-full">
@@ -273,13 +286,13 @@ const Header = ({ cartItems, updateQuantity, removeItem }) => {
             ) : (
               <>
                 {cartItems.map(item => (
-                  <CartItem 
-                    key={item.id}
-                    item={item}
-                    onUpdateQuantity={updateQuantity}
-                    onRemove={removeItem}
-                  />
-                ))}
+  <CartItem 
+    key={item.id}
+    item={item}
+    onUpdateQuantity={handleUpdateQuantity}
+    onRemove={handleRemoveItem}
+  />
+))}
                 
                 <div className="mt-4 flex justify-between items-center">
                   <span className="font-bold text-lg">Subtotal</span>
