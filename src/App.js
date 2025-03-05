@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 import "./App.css";
 import Header from "./components/Header";
 import HeroSection from "./components/HeroSection";
@@ -11,14 +12,45 @@ import ProductDetailsPage from "./ProductDetailsPage";
 import BedroomFurniture from "./components/BedroomFurniture";
 import DiningRoomFurniture from "./components/DiningRoomFurniture";
 import LivingRoomFurniture from "./components/LivingRoomFurniture";
-import Checkout from "./Checkout"; // Import Checkout page
+import Checkout from "./Checkout";
+
+// Reusable scroll animation wrapper component
+const ScrollAnimationWrapper = ({ children, delay = 0 }) => {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ 
+        opacity: 1, 
+        y: 0,
+        transition: {
+          duration: 0.6,
+          delay: delay,
+          ease: "easeOut"
+        }
+      }}
+      viewport={{ once: true, amount: 0.2 }}
+    >
+      {children}
+    </motion.div>
+  );
+};
 
 function Home({ onAddToCart }) {
   return (
     <>
-      <HeroSection />
-      <FurnitureUI onAddToCart={onAddToCart} />
-      <FeaturedCollections onAddToCart={onAddToCart} />
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+      >
+        <HeroSection />
+        <ScrollAnimationWrapper>
+          <FurnitureUI onAddToCart={onAddToCart} />
+        </ScrollAnimationWrapper>
+        <ScrollAnimationWrapper delay={0.2}>
+          <FeaturedCollections onAddToCart={onAddToCart} />
+        </ScrollAnimationWrapper>
+      </motion.div>
     </>
   );
 }
@@ -61,7 +93,7 @@ function App() {
       currentPrice:
         typeof product.currentPrice === "string"
           ? parseInt(product.currentPrice.replace(',', ''), 10)
-          : product.currentPrice || product.price || 0, // Handle numbers or missing prices
+          : product.currentPrice || product.price || 0,
     };
   
     const existingItem = cartItems.find(
@@ -80,38 +112,123 @@ function App() {
     }
   
     setCartItems(updatedCart);
-    localStorage.setItem("cartItems", JSON.stringify(updatedCart)); // Save instantly
+    localStorage.setItem("cartItems", JSON.stringify(updatedCart));
   };
-  
 
   return (
     <Router>
       <CreamBackground>
-        <div className="App">
+        <motion.div 
+          className="App"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+        >
           <Header
             cartItems={cartItems}
             updateQuantity={updateQuantity}
             removeItem={removeItem}
           />
-          <Routes>
-            <Route path="/" element={<Home onAddToCart={addToCart} />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/product" element={<ProductDetailsPage onAddToCart={addToCart} />} />
-            <Route path="/bedroom-furniture" element={<BedroomFurniture onAddToCart={addToCart} />} />
-            <Route path="/dining-room-furniture" element={<DiningRoomFurniture onAddToCart={addToCart} />} />
-            <Route path="/living-room-furniture" element={<LivingRoomFurniture onAddToCart={addToCart} />} />
-            <Route
-              path="/checkout"
-              element={
-                <Checkout
-                  cartItems={cartItems}
-                  updateQuantity={updateQuantity}
-                  removeItem={removeItem}
-                />
-              }
-            />
-          </Routes>
-        </div>
+          <AnimatePresence mode="wait">
+            <Routes>
+              <Route 
+                path="/" 
+                element={
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <Home onAddToCart={addToCart} />
+                  </motion.div>
+                } 
+              />
+              <Route 
+                path="/login" 
+                element={
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <Login />
+                  </motion.div>
+                } 
+              />
+              <Route 
+                path="/product" 
+                element={
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <ProductDetailsPage onAddToCart={addToCart} />
+                  </motion.div>
+                } 
+              />
+              <Route 
+                path="/bedroom-furniture" 
+                element={
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <BedroomFurniture onAddToCart={addToCart} />
+                  </motion.div>
+                } 
+              />
+              <Route 
+                path="/dining-room-furniture" 
+                element={
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <DiningRoomFurniture onAddToCart={addToCart} />
+                  </motion.div>
+                } 
+              />
+              <Route 
+                path="/living-room-furniture" 
+                element={
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <LivingRoomFurniture onAddToCart={addToCart} />
+                  </motion.div>
+                } 
+              />
+              <Route
+                path="/checkout"
+                element={
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <Checkout
+                      cartItems={cartItems}
+                      updateQuantity={updateQuantity}
+                      removeItem={removeItem}
+                    />
+                  </motion.div>
+                }
+              />
+            </Routes>
+          </AnimatePresence>
+        </motion.div>
       </CreamBackground>
     </Router>
   );
