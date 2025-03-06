@@ -30,6 +30,7 @@ const ProductDetailsPage = ({ onAddToCart })=> {
   const [selectedColor, setSelectedColor] = useState(selectedProduct.colors[0].name);
   const [mainImage, setMainImage] = useState(selectedProduct.image);
   const [searchQuery, setSearchQuery] = useState('');
+  const [isFavorite, setIsFavorite] = useState(false);
 
   // Redirect to home if no product found and using default product
   useMemo(() => {
@@ -48,6 +49,10 @@ const ProductDetailsPage = ({ onAddToCart })=> {
 
     // Call the onAddToCart function passed from App
     onAddToCart(cartItem);
+  };
+
+  const toggleFavorite = () => {
+    setIsFavorite(!isFavorite);
   };
 
   const pageVariants = {
@@ -133,8 +138,9 @@ const ProductDetailsPage = ({ onAddToCart })=> {
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
                 className="absolute top-4 right-4 bg-white p-3 rounded-full shadow-lg"
+                onClick={toggleFavorite}
               >
-                <Heart className="text-red-500" />
+                <Heart className={isFavorite ? "text-red-500 fill-red-500" : "text-red-500"} />
               </motion.button>
             </motion.div>
 
