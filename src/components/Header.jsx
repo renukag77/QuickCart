@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, ShoppingCart, User, Menu, X, Minus, Plus, Trash2 } from 'lucide-react';
+import { Search, ShoppingCart, User, Menu, X, Minus, Plus, Trash2, Heart } from 'lucide-react';
 import { Link, useNavigate } from "react-router-dom";
 
 // Cart Item Component
@@ -43,14 +43,44 @@ const CartItem = ({ item, onUpdateQuantity, onRemove }) => {
     </div>
   );
 };
+
+// Favorite Item Component
+const FavoriteItem = ({ item, onRemove }) => {
+  return (
+    <div className="flex justify-between items-center border-b py-4">
+      <div className="flex items-center space-x-4">
+        <img 
+          src={item.image} 
+          alt={item.name} 
+          className="w-16 h-16 object-cover rounded-md"
+        />
+        <div>
+          <h3 className="font-medium">{item.name}</h3>
+          <div className="flex items-center mt-2">
+            <span className="font-semibold">₹ {item.currentPrice.toLocaleString()}</span>
+          </div>
+        </div>
+      </div>
+      <button 
+        onClick={() => onRemove(item.id)}
+        className="text-red-500 hover:text-red-700"
+      >
+        <Trash2 size={20} />
+      </button>
+    </div>
+  );
+};
+
 // Main Header Component
-const Header = ({ cartItems, updateQuantity, removeItem }) => {
+const Header = ({ cartItems, updateQuantity, removeItem, favoriteItems = [], removeFavorite, onAddToFavorites }) => {
     const navigate = useNavigate();
   // State Management
   const [isScrolled, setIsScrolled] = useState(false);
   const [showBanner, setShowBanner] = useState(true);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isFavoritesOpen, setIsFavoritesOpen] = useState(false);
+  const [currentProduct, setCurrentProduct] = useState(null);
   
 
   // Scroll Effect
@@ -72,6 +102,19 @@ const Header = ({ cartItems, updateQuantity, removeItem }) => {
     return () => clearTimeout(timer);
   }, []);
 
+  // Get current product from location if available
+  useEffect(() => {
+    // Check if we're on a product details page
+    const path = window.location.pathname;
+    if (path.includes('/product/')) {
+      // Try to get the product info from the state
+      const state = window.history.state;
+      if (state && state.usr && state.usr.product) {
+        setCurrentProduct(state.usr.product);
+      }
+    }
+  }, [window.location.pathname]);
+
   // Cart Functionality
   const calculateTotal = () => {
     return cartItems.reduce((total, item) => {
@@ -80,6 +123,8 @@ const Header = ({ cartItems, updateQuantity, removeItem }) => {
   };
 
   const safeCartItems = Array.isArray(cartItems) ? cartItems : [];
+  const safeFavoriteItems = Array.isArray(favoriteItems) ? favoriteItems : [];
+  
   const handleUpdateQuantity = (id, newQuantity) => {
     if (updateQuantity) updateQuantity(id, newQuantity);
   };
@@ -92,7 +137,30 @@ const Header = ({ cartItems, updateQuantity, removeItem }) => {
     if (removeItem) removeItem(id);
   };
   
+  const handleRemoveFavorite = (id) => {
+    if (removeFavorite) removeFavorite(id);
+  };
 
+  const handleAddToFavorites = () => {
+    if (currentProduct && onAddToFavorites) {
+      // Create a favorite item with current product details
+      const favoriteItem = {
+        id: currentProduct.id,
+        name: currentProduct.name,
+        image: currentProduct.image,
+        currentPrice: currentProduct.currentPrice,
+        originalPrice: currentProduct.originalPrice
+      };
+      
+      // Add to favorites
+      onAddToFavorites(favoriteItem);
+    }
+  };
+
+  // Check if current product is in favorites
+  const isCurrentProductInFavorites = currentProduct && safeFavoriteItems.some(
+    item => item.id === currentProduct.id
+  );
 
   return (
     <div className="w-full">
@@ -200,6 +268,34 @@ const Header = ({ cartItems, updateQuantity, removeItem }) => {
                 </button>
               </div>
               
+              {/* Favorites */}
+              <div className="relative">
+                <button 
+                  className="p-1.5 hover:bg-white/10 rounded-full transition-all duration-300 transform hover:scale-110"
+                  onClick={() => {
+                    // If we're on a product page and have a current product, add to favorites
+                    if (currentProduct && onAddToFavorites && !isCurrentProductInFavorites) {
+                      handleAddToFavorites();
+                    } else {
+                      // Otherwise just open the favorites panel
+                      setIsFavoritesOpen(true);
+                    }
+                  }}
+                >
+                  <Heart 
+                    size={18} 
+                    className={`transition-transform duration-300 hover:rotate-12 ${
+                      isCurrentProductInFavorites ? "fill-red-500" : ""
+                    }`}
+                  />
+                </button>
+                {safeFavoriteItems.length > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-[#EFDFBB] text-[#722F37] text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center transition-all duration-500 transform hover:scale-110 animate-fadeIn">
+                    {safeFavoriteItems.length}
+                  </span>
+                )}
+              </div>
+              
               {/* User */}
               <Link to="/login" className="p-1.5 hover:bg-white/10 rounded-full transition-all duration-300 transform hover:scale-110">
                 <User size={18} className="transition-transform duration-300 hover:rotate-12" />
@@ -289,13 +385,13 @@ const Header = ({ cartItems, updateQuantity, removeItem }) => {
             ) : (
               <>
                 {cartItems.map(item => (
-  <CartItem 
-    key={item.id}
-    item={item}
-    onUpdateQuantity={handleUpdateQuantity}
-    onRemove={handleRemoveItem}
-  />
-))}
+                  <CartItem 
+                    key={item.id}
+                    item={item}
+                    onUpdateQuantity={handleUpdateQuantity}
+                    onRemove={handleRemoveItem}
+                  />
+                ))}
                 
                 <div className="mt-4 flex justify-between">
                   <span className="font-bold text-lg">Total</span>
@@ -303,6 +399,48 @@ const Header = ({ cartItems, updateQuantity, removeItem }) => {
                 </div>
                 <button onClick={handleCheckout} className="w-full bg-[#722F37] text-white py-3 rounded-lg mt-4">
                   Proceed to Checkout
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+      )}
+      
+      {/* Favorites Popup */}
+      {isFavoritesOpen && (
+        <div 
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm"
+          onClick={() => setIsFavoritesOpen(false)}
+        >
+          <div 
+            className="bg-white rounded-lg shadow-xl w-[500px] max-h-[80vh] overflow-y-auto p-6 relative"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button className="absolute top-4 right-4" onClick={() => setIsFavoritesOpen(false)}>
+              <X size={24} />
+            </button>
+            
+            <h2 className="text-2xl font-bold mb-4 flex items-center">
+              <Heart size={20} className="text-red-500 fill-red-500 mr-2" />
+              Your Favorites
+            </h2>
+            
+            {safeFavoriteItems.length === 0 ? (
+              <div className="text-center py-10 text-gray-500">
+                You haven't added any favorites yet
+              </div>
+            ) : (
+              <>
+                {safeFavoriteItems.map(item => (
+                  <FavoriteItem 
+                    key={item.id}
+                    item={item}
+                    onRemove={handleRemoveFavorite}
+                  />
+                ))}
+                
+                <button className="w-full bg-[#722F37] text-white py-3 rounded-lg mt-4">
+                  View All Favorites
                 </button>
               </>
             )}
